@@ -1,3 +1,4 @@
+'use client';
 import Phaser from "phaser";
 import { BackgroundMode } from "@/types/BackgroundMode";
 export default class Preloader extends Phaser.Scene{
@@ -28,8 +29,8 @@ export default class Preloader extends Phaser.Scene{
     private launchBackground(backgroundMode: BackgroundMode) {
         this.scene.launch('background', { backgroundMode })
     }
-    /* changeBackgroundMode(backgroundMode: BackgroundMode) {
+    changeBackgroundMode(backgroundMode: BackgroundMode) {
         this.scene.stop('background')
         this.launchBackground(backgroundMode)
-      } */
+      }
 }

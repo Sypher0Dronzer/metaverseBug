@@ -1,3 +1,4 @@
+'use client'
 import Phaser from 'phaser'
 import { BackgroundMode } from '../types/BackgroundMode'
 

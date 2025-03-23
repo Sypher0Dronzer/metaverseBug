@@ -1,10 +1,9 @@
-'use client';
-import dynamic from "next/dynamic";
-const PhaserGame = dynamic(() => import('../components/PhaserGame'), {
-  ssr: false
-});
+import GamePage from "@/components/GamePage";
+import HelperButtonGroup from "@/components/HelperButtonGroup";
 export default function Home() {
-  return (
-    <PhaserGame/>
+  return (<>
+   <GamePage/>
+   <HelperButtonGroup/>
+   </>
   );
 }
