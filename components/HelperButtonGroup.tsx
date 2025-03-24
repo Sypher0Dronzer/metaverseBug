@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Fab from '@mui/material/Fab'
 import Tooltip from '@mui/material/Tooltip'
@@ -45,7 +45,7 @@ export default function HelperButtonGroup() {
     <Backdrop>
       <ButtonGroup>
         <Tooltip title="Follow Us on Twitter">
-          <StyledFab size="small" href="" target="_blank">
+          <StyledFab size="small" href="https://x.com/_ieeeju?t=TkHeupITSuACLko8_wXXyQ&s=09" target="_blank">
             <TwitterIcon />
           </StyledFab>
         </Tooltip>

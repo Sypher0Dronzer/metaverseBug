@@ -18,7 +18,6 @@ export const backgroundSlice = createSlice({
         toggleBackgroundMode: (state) => {
             const newMode =
                 state.backgroundMode === BackgroundMode.DAY ? BackgroundMode.NIGHT : BackgroundMode.DAY
-
             state.backgroundMode = newMode
             if (phaserGame) {
                 const preloader = phaserGame.scene.keys.preloader as Preloader
