@@ -22,7 +22,7 @@ export default class Preloader extends Scene{
           this.load.image('backdrop_night', 'assets/background/backdrop_night.png')
           this.load.image('sun_moon', 'assets/background/sun_moon.png')
           this.load.on('complete', () => {
-            this.launchBackground(BackgroundMode.DAY)
+            this.launchBackground(BackgroundMode.NIGHT)
           })
     }
     private launchBackground(backgroundMode: BackgroundMode) {
