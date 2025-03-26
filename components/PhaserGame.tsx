@@ -3,7 +3,6 @@ import { Game,Scale } from 'phaser';
 import React, { useEffect, useRef, useState } from 'react';
 import Background from './Background';
 import Preloader from './Preloader';
-
 // Create a global variable to store the game instance
 let gameInstance: Game | null = null;
 
@@ -16,7 +15,6 @@ const PhaserGame: React.FC = () => {
   // Use state to track client-side mounting
   
   useEffect(() => {
-    // Only create game instance if we're in the browser and the ref is available
     if (gameContainerRef.current && !gameInstance) {
       const config: Phaser.Types.Core.GameConfig = {
         type: Phaser.AUTO,

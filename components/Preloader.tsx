@@ -31,5 +31,5 @@ export default class Preloader extends Scene{
     changeBackgroundMode(backgroundMode: BackgroundMode) {
         this.scene.stop('background')
         this.launchBackground(backgroundMode)
-      }
+    }
 }
