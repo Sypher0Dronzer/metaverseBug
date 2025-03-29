@@ -22,13 +22,14 @@ export default class Preloader extends Scene{
           this.load.image('backdrop_night', 'assets/background/backdrop_night.png')
           this.load.image('sun_moon', 'assets/background/sun_moon.png')
           this.load.on('complete', () => {
-            this.launchBackground(BackgroundMode.NIGHT)
+            this.launchBackground(BackgroundMode.DAY)
           })
     }
     private launchBackground(backgroundMode: BackgroundMode) {
         this.scene.launch('background', { backgroundMode })
     }
     changeBackgroundMode(backgroundMode: BackgroundMode) {
+      console.log('changing background mode');
         this.scene.stop('background')
         this.launchBackground(backgroundMode)
     }
