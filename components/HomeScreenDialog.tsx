@@ -131,7 +131,7 @@ export default function HomeScreenDialog() {
       setShowSnackbar(true)
     }
   } */
-  const lobbyJoined = false; // temporary action 
+  const lobbyJoined = true; // temporary action 
 
   return (
     <>
