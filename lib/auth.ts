@@ -28,7 +28,7 @@ export const handleSignup = async (data: z.infer<typeof signupSchema>) => {
 		const team = await prisma.team.create({
 			data: {
 				email,
-				name,
+				teamName:name,
 				password: hashedPassword,
 			},
 		});
@@ -53,12 +53,12 @@ export const handleLogin = async (data: z.infer<typeof loginSchema>) => {
 		await signIn("credentials", {
 			email,
 			password,
-			redirectTo: "/",
+			redirectTo: "/signin",//temporary action
 		});
 	} catch (error: any) {
 		if (error.type && error.type === "CredentialsSignin") {
 			return { error: "Invalid Credentials" };
-		} else return { error: "Something went wrong" };
+		} else return { error: error.message };
 	}
 
 	return { success: true, message: "Logged In" };

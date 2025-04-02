@@ -1,4 +1,4 @@
-import type { NextAuthOptions} from "next-auth"
+import type { NextAuthOptions, DefaultSession } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { loginSchema } from "@/types/auth"
 import prisma from "@/lib/prisma"
@@ -6,19 +6,19 @@ import bcrypt from "bcryptjs"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
 
-// declare module "next-auth" {
-//     interface User{
-//         role?: string
-//     }
-//     interface JWT{
-//         role: string
-//     }
-//     interface Session {
-//       user: {
-//         role: string
-//       } & DefaultSession["user"]
-//     }
-//   }
+ declare module "next-auth" {
+     interface User{
+        role?: string
+    }
+     interface JWT{
+        role: string
+    }
+     interface Session {
+       user: {
+        role: string
+      } & DefaultSession["user"]
+    }
+   }
 
 export default {
     providers: [
@@ -32,10 +32,12 @@ export default {
                 if (validatedFields.success) {
                     const { email, password } = validatedFields.data;
 
-                    const user = await prisma.user.findFirst({ where: { email } });
+                    const user = await prisma.team.findFirst({ where: { email } });
 
-                    if (!user || !user.password) return null;
-
+                    if (!user || !user.password) {
+                        console.log("User not found or password not set");
+                        return null;
+                    }
                     const passwordMatch = await bcrypt.compare(password, user.password);
 
                     if (passwordMatch) return user;
@@ -51,13 +53,13 @@ export default {
             }
             return session;
         },
-        // async jwt({token,user}){
-        //     if(user?.id)
-        //         token.id = user.id;
-        //     if(user?.role)
-        //         token.role = user.role;
-        //     return token;
-        // }
+         async jwt({token,user}){
+            if(user?.id)
+                token.id = user.id;
+         if(user?.role)
+                token.role = user.role;
+             return token;
+        }
     },
     adapter: PrismaAdapter(prisma),
     session: {strategy: "jwt"}

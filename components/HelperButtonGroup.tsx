@@ -7,7 +7,7 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import { BackgroundMode } from '../types/BackgroundMode'
-import { toggleBackgroundMode } from '../stores/BackgroundStore'
+import { toggleBackgroundMode } from '../stores/UserStore'
 import { useAppSelector, useAppDispatch } from '../hooks'
 
 
@@ -38,7 +38,7 @@ const StyledFab = styled(Fab)<{ target?: string }>`
 
 export default function HelperButtonGroup() {
   
-  const backgroundMode = useAppSelector((state) => state.background.backgroundMode)
+  const backgroundMode = useAppSelector((state) => state.user.backgroundMode)
   const dispatch = useAppDispatch()
 
   return (

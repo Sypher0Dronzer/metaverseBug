@@ -77,7 +77,7 @@ export default class Preloader extends Scene {
 
     this.load.on('complete', () => {
       this.preloadComplete = true
-      this.launchBackground(store.getState().background.backgroundMode)
+      this.launchBackground(store.getState().user.backgroundMode)
     })
   }
   private launchBackground(backgroundMode: BackgroundMode) {

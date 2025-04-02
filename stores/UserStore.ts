@@ -10,8 +10,8 @@ export function getInitialBackgroundMode() {
     return currentHour > 6 && currentHour <= 18 ? BackgroundMode.DAY : BackgroundMode.NIGHT
 }
 
-export const backgroundSlice = createSlice({
-    name: 'background',
+export const userSlice = createSlice({
+    name: 'user',
     initialState: {
         backgroundMode: getInitialBackgroundMode(),
         sessionId: '',
@@ -42,6 +42,6 @@ export const backgroundSlice = createSlice({
     },
 })
 
-export const { toggleBackgroundMode,setLoggedIn,setSessionId,setPlayerNameMap,removePlayerNameMap } = backgroundSlice.actions
-export default backgroundSlice.reducer
+export const { toggleBackgroundMode,setLoggedIn,setSessionId,setPlayerNameMap,removePlayerNameMap } = userSlice.actions
+export default userSlice.reducer
 

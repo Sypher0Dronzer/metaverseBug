@@ -10,13 +10,12 @@ import Snackbar from '@mui/material/Snackbar'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Image from 'next/image'
-/* 
-import { CustomRoomTable } from './CustomRoomTable' */
-/* import { CreateRoomForm } from './CreateRoomForm' */
+import { useEffect } from 'react'
 import { useAppSelector } from '../hooks'
 
-/* import phaserGame from '../PhaserGame' */
+import { getGameInstance } from './PhaserGame'
 import Preloader from '../components/Preloader'
+import { SignInForm,SignUpForm } from './AuthForms'
 
 const Backdrop = styled.div`
   position: absolute;
@@ -110,17 +109,21 @@ const ProgressBar = styled(LinearProgress)`
 `
 
 export default function HomeScreenDialog() {
+  const phaserGame = getGameInstance();
   const [showSignUpForm, setShowSignUpForm] = useState(false)
   const [showSignInForm, setShowSignInForm] = useState(false)
   const [showSnackbar, setShowSnackbar] = useState(false)
-  
-  // Original state variables
-  /* const [showCustomRoom, setShowCustomRoom] = useState(false)
-  const [showCreateRoomForm, setShowCreateRoomForm] = useState(false) */
-  
-  /*  const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
+  const loggedIn = useAppSelector((state) => state.user.loggedIn)
 
-  const handleConnect = () => {
+  useEffect(() => {
+    if (loggedIn) {
+      const preloader = phaserGame?.scene.keys.preloader as Preloader
+      /* preloader.launchGame() */
+    }
+    else {
+      setShowSnackbar(true)
+    }}, [loggedIn])
+  /*const handleConnect = () => {
     if (lobbyJoined) {
       const preloader = phaserGame.scene.keys.preloader as Preloader
       preloader.network
@@ -160,10 +163,9 @@ export default function HomeScreenDialog() {
                 <IconButton className="back-button" onClick={() => setShowSignUpForm(false)}>
                   <ArrowBackIcon />
                 </IconButton>
-                <Title>Sign Up</Title>
+                <Title>SignUp</Title>
               </TitleWrapper>
-              {/* Replace with SignUpForm when available */}
-             {/*  <CreateRoomForm /> */}
+              <SignUpForm />
             </CustomRoomWrapper>
           ) : showSignInForm ? (
             <CustomRoomWrapper>
@@ -173,8 +175,7 @@ export default function HomeScreenDialog() {
                 </IconButton>
                 <Title>Sign In</Title>
               </TitleWrapper>
-              {/* Replace with SignInForm when available */}
-             {/*  <CreateRoomForm /> */}
+             <SignInForm/>
             </CustomRoomWrapper>
           ) : (
             <>
@@ -184,21 +185,21 @@ export default function HomeScreenDialog() {
                   <Image
                     src={logo}
                     alt="Cypher Logo"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
+                    style={{ objectFit: "contain" }} 
                     priority
                   />
                 </LogoContainer>
-                <Button variant="contained" color="secondary"  onClick={() => (lobbyJoined ? setShowSignUpForm(true) : setShowSnackbar(true))}>
-                  SignUp
+                <Button variant="contained" color="secondary" onClick={() => setShowSignUpForm(true)}>
+                  Sign Up
                 </Button>
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => (lobbyJoined ? setShowSignInForm(true) : setShowSnackbar(true))}
+                  onClick={() => setShowSignInForm(true)}
                 >
                   SignIn
-                </Button>   
+                </Button>
               </Content>
             </>
           )}
