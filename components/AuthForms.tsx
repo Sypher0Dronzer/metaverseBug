@@ -123,6 +123,7 @@ export const SignInForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleChange = (prop: keyof z.infer<typeof loginSchema>) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -152,6 +153,8 @@ export const SignInForm = () => {
         setErrors(fieldErrors);
       } else if (response.error) {
         setFormError(response.error.toString());
+      } else {
+        router.push("/signin");
       }
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'An error occurred during signin');
