@@ -1,4 +1,4 @@
-import type { NextAuthOptions, DefaultSession } from "next-auth"
+import type { NextAuthConfig, DefaultSession } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { loginSchema } from "@/types/auth"
 import prisma from "@/lib/prisma"
@@ -63,4 +63,4 @@ export default {
     },
     adapter: PrismaAdapter(prisma),
     session: {strategy: "jwt"}
-} satisfies NextAuthOptions
+} satisfies NextAuthConfig

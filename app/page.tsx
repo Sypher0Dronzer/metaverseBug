@@ -16,7 +16,7 @@ const Backdrop = styled.div`
   width: 100%;
 `
 export default function Home() {
-  let ui=<HomeScreenDialog/>
+  const ui=<HomeScreenDialog/>
   return (<>
   <Provider store={store}>
   <ThemeProvider theme={muiTheme}>

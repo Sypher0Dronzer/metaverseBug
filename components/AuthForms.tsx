@@ -9,6 +9,8 @@ import { handleSignup, handleLogin } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { signupSchema, loginSchema } from '@/types/auth';
+import { useAppDispatch,useAppSelector } from '@/hooks';
+import { setLoggedIn } from '@/stores/UserStore';
 
 const FormWrapper = styled.form`
   display: flex;
@@ -18,6 +20,8 @@ const FormWrapper = styled.form`
 `;
 
 export const SignUpForm = () => {
+  const loggedIn=useAppSelector((state)=>state.user.loggedIn)
+  const dispatch=useAppDispatch()
   const router = useRouter();
   const [values, setValues] = useState({
     name: '',
@@ -58,6 +62,7 @@ export const SignUpForm = () => {
         setFormError(response.error.toString());
       } else if (response.success) {
         router.push('/signin');//temporary action
+        dispatch(setLoggedIn(true));
       }
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'An error occurred during signup');
@@ -116,6 +121,8 @@ export const SignUpForm = () => {
 };
 
 export const SignInForm = () => {
+  const loggedIn=useAppSelector((state)=>state.user.loggedIn)
+  const dispatch=useAppDispatch();
   const [values, setValues] = useState({
     email: '',
     password: '',
@@ -154,7 +161,8 @@ export const SignInForm = () => {
       } else if (response.error) {
         setFormError(response.error.toString());
       } else {
-        router.push("/signin");
+        router.push("/signin");//temporary action
+        dispatch(setLoggedIn(true));
       }
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'An error occurred during signin');

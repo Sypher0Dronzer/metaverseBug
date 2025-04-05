@@ -3,10 +3,8 @@ import PlayerSelector from './PlayerSelector'
 import { PlayerBehavior } from '../types/PlayerBehavior'
 import { sittingShiftData } from './Player'
 import Player from './Player'
-/* import Network from '../services/Network' */
+import Network from '../services/Network'
 import Chair from '../items/Chair'
-/* import Computer from '../items/Computer'
-import Whiteboard from '../items/Whiteboard' */
 
 import { phaserEvents, Event } from '../events/EventCenter'
 import store from '../stores'
@@ -47,7 +45,7 @@ export default class MyPlayer extends Player {
     cursors: NavKeys,
     keyE: Phaser.Input.Keyboard.Key,
     keyR: Phaser.Input.Keyboard.Key,
-   /*  network: Network */
+    network: Network
   ) {
     if (!cursors) return
 

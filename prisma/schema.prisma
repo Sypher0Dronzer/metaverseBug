@@ -15,8 +15,19 @@ datasource db {
 
 model Team {
   id       String @id @default(cuid())
-  teamName String
+  teamName String @unique
   email    String @unique()
   password String
   score    Int    @default(0)
+  player Player?
+}
+
+model Player{
+  id             String   @id @default(cuid())
+  name           String   @default("") @unique()
+  team           Team       @relation(fields: [name], references: [teamName])
+  x              Float    @default(705)
+  y              Float    @default(500)
+  anim           String   @default("adam_idle_down")
+  readyToConnect Boolean  @default(false)
 }
