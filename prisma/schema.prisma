@@ -29,5 +29,4 @@ model Player{
   x              Float    @default(705)
   y              Float    @default(500)
   anim           String   @default("adam_idle_down")
-  readyToConnect Boolean  @default(false)
 }

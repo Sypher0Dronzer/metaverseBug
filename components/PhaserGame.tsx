@@ -23,8 +23,9 @@ const PhaserGame: React.FC = () => {
         // Dynamically import the scene files
         Promise.all([
           import('./Preloader').then(module => module.default),
-          import('./Background').then(module => module.default)
-        ]).then(([Preloader, Background]) => {
+          import('./Background').then(module => module.default),
+          import('./Game').then(module => module.default)
+        ]).then(([Preloader, Background,Game]) => {
           const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
             parent: gameContainerRef.current,
@@ -46,11 +47,12 @@ const PhaserGame: React.FC = () => {
               },
             },
             autoFocus: true,
-            scene: [Preloader, Background], // Attach dynamically imported scenes
+            scene: [Preloader, Background,Game], // Attach dynamically imported scenes
           };
 
           // ✅ Assign the Phaser game instance globally
           gameInstance = new Phaser.Game(config);
+          console.log('Phaser game instance created:', gameInstance);
         });
       });
     }

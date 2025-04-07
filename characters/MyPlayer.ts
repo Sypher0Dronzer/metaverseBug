@@ -3,11 +3,12 @@ import PlayerSelector from './PlayerSelector'
 import { PlayerBehavior } from '../types/PlayerBehavior'
 import { sittingShiftData } from './Player'
 import Player from './Player'
-import Network from '../services/Network'
 import Chair from '../items/Chair'
+import store from '@/stores'
+import { updatePlayer } from '@/stores/UserStore'
 
 import { phaserEvents, Event } from '../events/EventCenter'
-import store from '../stores'
+
 import { ItemType } from '../types/Items'
 import { NavKeys } from '../types/KeyboardState'
 /* import { openURL } from '../utils/helpers' */
@@ -45,7 +46,6 @@ export default class MyPlayer extends Player {
     cursors: NavKeys,
     keyE: Phaser.Input.Keyboard.Key,
     keyR: Phaser.Input.Keyboard.Key,
-    network: Network
   ) {
     if (!cursors) return
 
@@ -53,14 +53,6 @@ export default class MyPlayer extends Player {
 
     if (Phaser.Input.Keyboard.JustDown(keyR)) {
       switch (item?.itemType) {
-        /* case ItemType.COMPUTER:
-          const computer = item as Computer
-          computer.openDialog(this.playerId, network)
-          break
-        case ItemType.WHITEBOARD:
-          const whiteboard = item as Whiteboard
-          whiteboard.openDialog(network)
-          break */
         case ItemType.VENDINGMACHINE:
           // hacky and hard-coded, but leaving it as is for now
           /* const url = 'https://www.buymeacoffee.com/skyoffice'
@@ -107,6 +99,14 @@ export default class MyPlayer extends Player {
               }
               // send new location and anim to server
               /* network.updatePlayer(this.x, this.y, this.anims.currentAnim?.key) */
+           
+              store.dispatch(
+                updatePlayer({
+                  x: this.x,
+                  y: this.y,
+                  anim: this.anims.currentAnim?.key || null,
+                })
+              );
             },
             loop: false,
           })
@@ -141,6 +141,14 @@ export default class MyPlayer extends Player {
 
         // update animation according to velocity and send new location and anim to server
         /* if (vx !== 0 || vy !== 0) network.updatePlayer(this.x, this.y, this.anims.currentAnim?.key) */
+        if(vx !== 0 || vy !== 0){
+          store.dispatch(
+            updatePlayer({
+              x: this.x,
+              y: this.y,
+              anim: this.anims.currentAnim?.key || null,
+            })
+          )
         if (vx > 0) {
           this.play(`${this.playerTexture}_run_right`, true)
         } else if (vx < 0) {
@@ -159,11 +167,18 @@ export default class MyPlayer extends Player {
             this.play(parts.join('_'), true)
             // send new location and anim to server
             /* network.updatePlayer(this.x, this.y, this.anims.currentAnim?.key) */
+        
+            store.dispatch(
+              updatePlayer({
+                x: this.x,
+                y: this.y,
+                anim: this.anims.currentAnim?.key || null,
+              }))
           }
           }
         }
         break
-
+      }
       case PlayerBehavior.SITTING:
         // back to idle if player press E while sitting
         if (Phaser.Input.Keyboard.JustDown(keyE) && this.anims.currentAnim) {
@@ -175,6 +190,13 @@ export default class MyPlayer extends Player {
           playerSelector.setPosition(this.x, this.y)
           playerSelector.update(this, cursors)
           /* network.updatePlayer(this.x, this.y, this.anims.currentAnim.key) */
+          
+          store.dispatch(
+            updatePlayer({
+              x: this.x,
+              y: this.y,
+              anim: this.anims.currentAnim?.key || null,
+            }))
         }
         break
     }

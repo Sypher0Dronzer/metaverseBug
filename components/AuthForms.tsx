@@ -6,11 +6,11 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import { handleSignup, handleLogin } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { signupSchema, loginSchema } from '@/types/auth';
 import { useAppDispatch,useAppSelector } from '@/hooks';
 import { setLoggedIn } from '@/stores/UserStore';
+import { setUser } from '@/stores/AuthStore';
 
 const FormWrapper = styled.form`
   display: flex;
@@ -20,9 +20,7 @@ const FormWrapper = styled.form`
 `;
 
 export const SignUpForm = () => {
-  const loggedIn=useAppSelector((state)=>state.user.loggedIn)
   const dispatch=useAppDispatch()
-  const router = useRouter();
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -49,7 +47,7 @@ export const SignUpForm = () => {
     try {
       setIsSubmitting(true);
       const response = await handleSignup(values);
-      
+      const user={name:values.name,email:values.email}
       if (response.errors) {
         const fieldErrors: Record<string, string> = {};
         response.errors.forEach((err) => {
@@ -61,8 +59,8 @@ export const SignUpForm = () => {
       } else if (response.error) {
         setFormError(response.error.toString());
       } else if (response.success) {
-        router.push('/signin');//temporary action
         dispatch(setLoggedIn(true));
+        dispatch(setUser(user))
       }
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'An error occurred during signup');
@@ -121,7 +119,6 @@ export const SignUpForm = () => {
 };
 
 export const SignInForm = () => {
-  const loggedIn=useAppSelector((state)=>state.user.loggedIn)
   const dispatch=useAppDispatch();
   const [values, setValues] = useState({
     email: '',
@@ -130,7 +127,6 @@ export const SignInForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
 
   const handleChange = (prop: keyof z.infer<typeof loginSchema>) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -161,7 +157,6 @@ export const SignInForm = () => {
       } else if (response.error) {
         setFormError(response.error.toString());
       } else {
-        router.push("/signin");//temporary action
         dispatch(setLoggedIn(true));
       }
     } catch (err) {

@@ -9,12 +9,12 @@ import VendingMachine from '../items/VendingMachine'
 import '../characters/MyPlayer'
 import MyPlayer from '../characters/MyPlayer'
 import PlayerSelector from '../characters/PlayerSelector'
-import Network from '../services/Network'
 import { PlayerBehavior } from '../types/PlayerBehavior'
-import { NavKeys, Keyboard } from '../types/KeyboardState'
+import { NavKeys } from '../types/KeyboardState'
+import { setReadyToConnect } from '@/stores/UserStore'
+import store from '@/stores'
 
 export default class Game extends Phaser.Scene {
-  network!: Network
   private cursors!: NavKeys
   private keyE!: Phaser.Input.Keyboard.Key
   private keyR!: Phaser.Input.Keyboard.Key
@@ -58,12 +58,7 @@ export default class Game extends Phaser.Scene {
       }
   }
 
-  create(data: { network: Network }) {
-    if (!data.network) {
-      throw new Error('server instance missing')
-    } else {
-      this.network = data.network
-    }
+  create() {
 
     createCharacterAnims(this.anims)
 
@@ -76,7 +71,8 @@ export default class Game extends Phaser.Scene {
     groundLayer?.setCollisionByProperty({ collides: true })
     // debugDraw(groundLayer, this)
 
-    this.myPlayer = this.add.myPlayer(705, 500, 'adam', this.network.mySessionId)
+    const playerId = 'local-player' // In single player mode, we can use a fixed ID
+    this.myPlayer = this.add.myPlayer(705, 500, 'adam', playerId)
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16)
 
     // import chair objects from Tiled map to Phaser
@@ -149,10 +145,16 @@ export default class Game extends Phaser.Scene {
       undefined,
       this
     )
-
+    this.myPlayer.setActive(true).setVisible(true)
+    if (this.myPlayer.playerContainer) {
+      this.myPlayer.playerContainer.setActive(true).setVisible(true)
+    }
+    
+    // Make sure input is enabled
+    this.enableKeys()
 
     // register network event listeners
-    this.network.onMyPlayerReady(this.handleMyPlayerReady, this)
+    store.dispatch(setReadyToConnect(true))
   }
 
   private handleItemSelectorOverlap(playerSelector: PlayerSelector, selectionItem: Item) {
@@ -212,9 +214,9 @@ export default class Game extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    if (this.myPlayer && this.network) {
+    if (this.myPlayer) {
       this.playerSelector.update(this.myPlayer, this.cursors)
-      this.myPlayer.update(this.playerSelector, this.cursors, this.keyE, this.keyR, this.network)
+      this.myPlayer.update(this.playerSelector, this.cursors, this.keyE, this.keyR)
     }
   }
 }

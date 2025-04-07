@@ -19,12 +19,5 @@ const colorArr = [
   '#5f9da0',
 ]
 
-// determine name color by first character charCode
-export function getColorByString(string: string) {
-  return colorArr[Math.floor(string.charCodeAt(0) % colorArr.length)]
-}
 
-export function getAvatarString(name: string) {
-  const part = name.split(' ')
-  return part.length < 2 ? part[0][0] : part[0][0] + part[1][0]
-}
+

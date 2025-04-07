@@ -2,6 +2,7 @@
 import { Scene } from "phaser";
 import { BackgroundMode } from "@/types/BackgroundMode";
 import store from "@/stores";
+import { setLoggedIn, setReadyToConnect } from "@/stores/UserStore";
 export default class Preloader extends Scene {
   private preloadComplete = false
   constructor() {
@@ -78,7 +79,29 @@ export default class Preloader extends Scene {
     this.load.on('complete', () => {
       this.preloadComplete = true
       this.launchBackground(store.getState().user.backgroundMode)
+      if (store.getState().user.loggedIn) {
+        this.launchGame();
+      }
     })
+  }
+  launchGame() {
+    if (!this.preloadComplete) return;
+    
+    console.log('Launching game scene'); // Debug log
+    
+    // Make sure the game scene is not already running
+    if (!this.scene.isActive('game')) {
+      this.scene.launch('game');
+      
+      // Make game scene visible and active
+      this.scene.bringToTop('game');
+      
+      // Hide the background scene or adjust its visibility as needed
+      // this.scene.sendToBack('background');
+      
+      // update Redux state
+      store.dispatch(setReadyToConnect(true));
+    }
   }
   private launchBackground(backgroundMode: BackgroundMode) {
     this.scene.launch('background', { backgroundMode })
@@ -87,5 +110,11 @@ export default class Preloader extends Scene {
     console.log('changing background mode');
     this.scene.stop('background')
     this.launchBackground(backgroundMode)
+  }
+  update() {
+    // Check if user is logged in but game isn't started yet
+    if (store.getState().user.readyToConnect && this.preloadComplete && !this.scene.isActive('game')) {
+      this.launchGame();
+    }
   }
 }

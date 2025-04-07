@@ -1,7 +1,6 @@
 "use client";
 import { BackgroundMode } from "@/types/BackgroundMode";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { sanitizeId } from '../util'
 import { getGameInstance } from "../components/PhaserGame";
 import Preloader from "@/components/Preloader";
 const phaserGame = getGameInstance()
@@ -17,6 +16,12 @@ export const userSlice = createSlice({
         sessionId: '',
         loggedIn: false,
         playerNameMap: new Map<string, string>(),
+        x:705,
+        y:500,
+        anim:"",
+        readyToConnect:false,
+        playerName: "",
+  playerTexture: "",
     },
     reducers: {
         toggleBackgroundMode: (state) => {
@@ -33,15 +38,33 @@ export const userSlice = createSlice({
         setLoggedIn: (state, action: PayloadAction<boolean>) => {
             state.loggedIn = action.payload
         },
-        setPlayerNameMap: (state, action: PayloadAction<{ id: string; name: string }>) => {
-            state.playerNameMap.set(sanitizeId(action.payload.id), action.payload.name)
-        },
-        removePlayerNameMap: (state, action: PayloadAction<string>) => {
-            state.playerNameMap.delete(sanitizeId(action.payload))
-        },
+        updatePlayer: (
+            state,
+            action: PayloadAction<{ x: number; y: number; anim: string | null }>
+          ) => {
+            state.x = action.payload.x;
+            state.y = action.payload.y;
+            state.anim = action.payload.anim ?? "";
+          },
+          setReadyToConnect: (state, action: PayloadAction<boolean>) => {
+            state.readyToConnect = action.payload
+          },
+          setInitialisation: (
+            state,
+            action: PayloadAction<boolean | { name: string; avatar: string }>
+          ) => {
+            if (typeof action.payload === 'boolean') {
+              state.readyToConnect = action.payload
+            } else {
+              state.readyToConnect = true
+              state.playerName = action.payload.name
+              state.playerTexture = action.payload.avatar
+            }
+          },
+            
     },
 })
 
-export const { toggleBackgroundMode,setLoggedIn,setSessionId,setPlayerNameMap,removePlayerNameMap } = userSlice.actions
+export const { toggleBackgroundMode,setLoggedIn,setSessionId,updatePlayer,setReadyToConnect,setInitialisation } = userSlice.actions
 export default userSlice.reducer
 

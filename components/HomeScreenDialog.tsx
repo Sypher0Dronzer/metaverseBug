@@ -12,6 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useAppSelector } from '../hooks'
+import LoginDialog from './LoginDialog'
 
 import { getGameInstance } from './PhaserGame'
 import Preloader from '../components/Preloader'
@@ -26,6 +27,7 @@ const Backdrop = styled.div`
   flex-direction: column;
   gap: 60px;
   align-items: center;
+   z-index: 1000;
 `
 
 const Wrapper = styled.div`
@@ -113,12 +115,33 @@ export default function HomeScreenDialog() {
   const [showSignUpForm, setShowSignUpForm] = useState(false)
   const [showSignInForm, setShowSignInForm] = useState(false)
   const [showSnackbar, setShowSnackbar] = useState(false)
+  const [showLoginDialog, setShowLoginDialog] = useState(false)
   const loggedIn = useAppSelector((state) => state.user.loggedIn)
+  const readyToConnect = useAppSelector((state) => state.user.readyToConnect)
 
   useEffect(() => {
+    // This effect runs when loggedIn state changes
+    if (loggedIn && phaserGame) {
+      console.log('User logged in, launching game from HomeScreenDialog')
+      // @ts-ignore (to handle your custom preloader method)
+      const preloader = phaserGame.scene.keys.preloader
+      if (preloader) {
+        // @ts-ignore
+        preloader.launchGame()
+      } else {
+        console.error('Preloader scene not found')
+        setShowSnackbar(true)
+      }
+    } else if (!loggedIn) {
+      setShowSnackbar(true)
+    }
+  }, [loggedIn, phaserGame])
+
+  useEffect(() => {
+    // When user is logged in, ensure all dialogs are hidden
     if (loggedIn) {
       const preloader = phaserGame?.scene.keys.preloader as Preloader
-      /* preloader.launchGame() */
+      preloader.launchGame()
     }
     else {
       setShowSnackbar(true)
@@ -204,12 +227,12 @@ export default function HomeScreenDialog() {
             </>
           )}
         </Wrapper>
-        {/* {!lobbyJoined && (
+         {/* {!lobbyJoined && (
           <ProgressBarWrapper>
             <h3> Connecting to server...</h3>
             <ProgressBar color="secondary" />
           </ProgressBarWrapper>
-        )} */}
+        )}  */}
       </Backdrop>
     </>
   )
